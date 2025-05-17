@@ -49,6 +49,15 @@ async function run() {
       res.send(result); 
     })
 
+    //Create In The Time Of Post Rental Products Data (rental_products_data)
+    const rentalProductsData = client.db("Rental_and_Booking_Services").collection("rental_products_data")
+    app.post('/rentalProducts', async(req, res) => {
+      const rentalProducts = req.body;
+      console.log(professionalData);
+      const result = await rentalProductsData.insertOne(rentalProducts);
+      res.send(result); 
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
