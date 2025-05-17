@@ -32,11 +32,20 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    //Create In The Time Of Registration (users)
     const usersCollection = client.db("Rental_and_Booking_Services").collection("users")
     app.post('/users', async(req, res) => {
       const users = req.body;
-      console.log(users);
       const result = await usersCollection.insertOne(users);
+      res.send(result); 
+    })
+
+    //Create In The Time Of Post Professional Data (professionalData)
+    const professionalData = client.db("Rental_and_Booking_Services").collection("professionals_data")
+    app.post('/professionals', async(req, res) => {
+      const professionals = req.body;
+      console.log(professionalData);
+      const result = await professionalData.insertOne(professionals);
       res.send(result); 
     })
 
