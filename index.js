@@ -32,8 +32,9 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const usersCollection = client.db("Rental_and_Booking_Services").collection("users");
+    
     //Create In The Time Of Registration (users)
-    const usersCollection = client.db("Rental_and_Booking_Services").collection("users")
     app.post('/users', async(req, res) => {
       const users = req.body;
       const result = await usersCollection.insertOne(users);
@@ -58,6 +59,12 @@ async function run() {
       res.send(result); 
     })
 
+    //Getting Data from Database
+    app.get('/users', async(req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result)
+    })
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
