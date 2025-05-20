@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -41,20 +41,20 @@ async function run() {
       res.send(result); 
     })
 
-    //Create In The Time Of Post Professional Data (professionalData)
-    const professionalData = client.db("Rental_and_Booking_Services").collection("professionals_data")
+    //Create In The Time Of Post Professional Data (professionalsData)
+    const professionalsData = client.db("Rental_and_Booking_Services").collection("professionals_data")
     app.post('/professionals', async(req, res) => {
       const professionals = req.body;
-      console.log(professionalData);
-      const result = await professionalData.insertOne(professionals);
+      console.log(professionalsData);
+      const result = await professionalsData.insertOne(professionals);
       res.send(result); 
     })
+
 
     //Create In The Time Of Post Rental Products Data (rental_products_data)
     const rentalProductsData = client.db("Rental_and_Booking_Services").collection("rental_products_data")
     app.post('/rentalProducts', async(req, res) => {
       const rentalProducts = req.body;
-      console.log(professionalData);
       const result = await rentalProductsData.insertOne(rentalProducts);
       res.send(result); 
     })
@@ -62,6 +62,18 @@ async function run() {
     //Getting Data from Database
     app.get('/users', async(req, res) => {
       const result = await usersCollection.find().toArray();
+      res.send(result)
+    })
+
+
+    //Getting Specific Data from Database
+    app.put('/users/:id', async(req, res) => {
+      const id=req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateUser = req.body;
+      const updateDoc = { $set: updateUser };
+      const result = await usersCollection.updateOne(filter,updateDoc,options);
       res.send(result)
     })
     
