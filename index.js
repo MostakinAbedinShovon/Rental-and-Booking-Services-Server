@@ -41,11 +41,26 @@ async function run() {
       res.send(result); 
     })
 
+    //For Booked Items
+    const bookingCollection = client.db("Rental_and_Booking_Services").collection("Booked_items");
+    
+    //Getting Data from Database
+    app.get('/bookedItems', async(req, res) => {
+      const result = await bookingCollection.find().toArray();
+      res.send(result)
+    })
+    
+    //Create In The Time Of Registration (users)
+    app.post('/bookedItems', async(req, res) => {
+      const item = req.body;
+      const result = await bookingCollection.insertOne(item);
+      res.send(result); 
+    })
+
     //Create In The Time Of Post Professional Data (professionalsData)
     const professionalsData = client.db("Rental_and_Booking_Services").collection("professionals_data")
     app.post('/professionals', async(req, res) => {
       const professionals = req.body;
-      console.log(professionalsData);
       const result = await professionalsData.insertOne(professionals);
       res.send(result); 
     })
@@ -65,6 +80,41 @@ async function run() {
       res.send(result)
     })
 
+    //Getting Specific Data from Database
+    app.get('/users/:id', async(req, res) => {
+      const id=req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const result = await usersCollection.findOne(filter);
+      res.send(result)
+    })
+
+    //Getting Specific Professionals Data from Database
+    app.get('/professionalsData/:id', async(req, res) => {
+      const id=req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const result = await professionalsData.findOne(filter);
+      res.send(result)
+    })
+
+    //Getting Specific Professionals Data from Database
+    app.delete('/professionalsData/:id', async(req, res) => {
+      const id=req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const result = await professionalsData.deleteOne(filter);
+      res.send(result)
+    })
+
+    //Getting Professionals Data from Database
+    app.get('/professionalsData', async(req, res) => {
+      const result = await professionalsData.find().toArray();
+      res.send(result)
+    })
+
+    //Getting Rental Products Data from Database
+    app.get('/rentalProductsData', async(req, res) => {
+      const result = await rentalProductsData.find().toArray();
+      res.send(result)
+    })
 
     //Getting Specific Data from Database
     app.put('/users/:id', async(req, res) => {
@@ -76,6 +126,7 @@ async function run() {
       const result = await usersCollection.updateOne(filter,updateDoc,options);
       res.send(result)
     })
+
     
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
